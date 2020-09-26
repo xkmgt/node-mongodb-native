@@ -332,7 +332,7 @@ export class ListIndexesOperation extends CommandOperation<ListIndexesOptions, D
 
       server.query(
         systemIndexesNS,
-        { query: { ns: collectionNS } },
+        { filter: { ns: collectionNS } },
         this.options as FindOptions,
         callback
       );

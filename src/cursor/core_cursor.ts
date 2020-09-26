@@ -92,7 +92,6 @@ export class CoreCursor<
   options: T;
   topology: Topology;
   logger: Logger;
-  query?: Document;
   s!: CoreCursorPrivate;
 
   // INTERNAL CURSOR STATE
@@ -434,9 +433,9 @@ export class CoreCursor<
 
   /** @internal */
   _getMore(callback: Callback<Document>): void {
-    if (this.logger.isDebug()) {
-      this.logger.debug(`schedule getMore call for query [${JSON.stringify(this.query)}]`);
-    }
+    // if (this.logger.isDebug()) {
+    //   this.logger.debug(`schedule getMore call for query [${JSON.stringify(this.query)}]`);
+    // }
 
     if (this.cursorId == null) {
       if (callback) callback(new MongoError('getMore attempted on invalid cursor id'));
@@ -567,13 +566,13 @@ export class CoreCursor<
       done(undefined, result);
     };
 
-    if (this.logger.isDebug()) {
-      this.logger.debug(
-        `issue initial query [${JSON.stringify(this.cmd)}] with flags [${JSON.stringify(
-          this.query
-        )}]`
-      );
-    }
+    // if (this.logger.isDebug()) {
+    //   this.logger.debug(
+    //     `issue initial query [${JSON.stringify(this.cmd)}] with flags [${JSON.stringify(
+    //       this.query
+    //     )}]`
+    //   );
+    // }
 
     executeOperation(this.topology, this.operation as any, (err, result) => {
       if (err || !result) {

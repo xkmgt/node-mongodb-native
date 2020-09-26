@@ -254,7 +254,7 @@ export class Cursor<
       throw new MongoError('Cursor is closed');
     }
 
-    this.cmd.query = filter;
+    this.cmd.filter = filter;
     return this;
   }
 
@@ -766,7 +766,7 @@ export class Cursor<
     options?: CountOptions | Callback<number>,
     callback?: Callback<number>
   ): Promise<number> | void {
-    if (this.cmd.query == null) {
+    if (this.cmd.filter == null) {
       throw new MongoError('count can only be used with find command');
     }
 

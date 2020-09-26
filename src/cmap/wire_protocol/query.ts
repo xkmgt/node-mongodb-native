@@ -66,12 +66,8 @@ function prepareFindCommand(server: Server, ns: string, cmd: Document) {
     find: collectionNamespace(ns)
   };
 
-  if (cmd.query) {
-    if (cmd.query['$query']) {
-      findCmd.filter = cmd.query['$query'];
-    } else {
-      findCmd.filter = cmd.query;
-    }
+  if (cmd.filter) {
+    findCmd.filter = cmd.filter;
   }
 
   let sortValue = cmd.sort;
@@ -202,7 +198,7 @@ function prepareLegacyFindQuery(
     findCmd['$explain'] = true;
   }
 
-  findCmd['$query'] = cmd.query;
+  findCmd.$query = cmd.filter;
   if (cmd.readConcern && cmd.readConcern.level !== 'local') {
     throw new MongoError(
       `server find command does not support a readConcern level of ${cmd.readConcern.level}`

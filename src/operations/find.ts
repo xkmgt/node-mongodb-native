@@ -125,8 +125,8 @@ export class FindOperation extends CommandOperation<FindOptions, Document> {
 
     // FIXME: this should be removed as part of NODE-2790
     this.cmd = {
-      find: this.ns.toString(),
-      query: this.filter
+      find: this.ns.collection,
+      filter: this.filter
     };
 
     // TODO: figure out our story about inheriting BSON serialization options

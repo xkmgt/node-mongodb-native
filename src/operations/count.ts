@@ -61,7 +61,7 @@ export class CountOperation extends CommandOperation<CountOptions, number> {
 
     let command;
     try {
-      command = buildCountCommand(cursor, cursor.cmd.query, finalOptions);
+      command = buildCountCommand(cursor, cursor.cmd.filter, finalOptions);
     } catch (err) {
       return callback(err);
     }

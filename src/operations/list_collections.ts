@@ -81,7 +81,7 @@ export class ListCollectionsOperation extends CommandOperation<ListCollectionsOp
       const transforms = listCollectionsTransforms(databaseName);
       server.query(
         `${databaseName}.${CONSTANTS.SYSTEM_NAMESPACE_COLLECTION}`,
-        { query: filter },
+        { filter },
         { batchSize: this.batchSize || 1000 },
         (err, result) => {
           if (result && result.documents && Array.isArray(result.documents)) {
