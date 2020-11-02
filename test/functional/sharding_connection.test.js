@@ -3,7 +3,7 @@
 const withClient = require('./shared').withClient;
 const setupDatabase = require('./shared').setupDatabase;
 const expect = require('chai').expect;
-const TopologyType = require('../../lib/sdam/common').TopologyType;
+const TopologyType = require('../../src/sdam/common').TopologyType;
 
 describe('Sharding (Connection)', function () {
   before(function () {
