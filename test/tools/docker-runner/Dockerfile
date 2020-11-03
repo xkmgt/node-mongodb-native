@@ -13,6 +13,7 @@ WORKDIR /root
 COPY entrypoint.sh entrypoint.sh
 
 ARG MONGODB_URI
+ARG DRIVER_VERSION
 
 ENV DRIVER_REVISION "master"
 ENV DRIVER_REPOSITORY "https://github.com/mongodb/node-mongodb-native.git"
