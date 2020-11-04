@@ -1,4 +1,4 @@
-echo "Getting ${DRIVER_REPOSITORY}@${DRIVER_REVISION}..."
+echo "Getting ${DRIVER_REPOSITORY}@${DRIVER_REVISION} version ${DRIVER_VERSION}"
 git clone -b v${DRIVER_VERSION} $DRIVER_REPOSITORY driver_src
 cd driver_src
 
@@ -11,4 +11,9 @@ curl https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | bash 
     && npm install
 
 # Run the tests with the provided MONGODB_URI
-MONGODB_URI=${MONGODB_URI} npm run test
+if [ $DRIVER_VERSION == "3.3.0" ]; then
+  echo "Old version, running special test script"
+  ./node_modules/.bin/mongodb_test_runner -s -l -e single test/core test/unit test/functional
+else
+  MONGODB_URI=${MONGODB_URI} npm run test
+fi

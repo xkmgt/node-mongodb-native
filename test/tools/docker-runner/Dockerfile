@@ -15,8 +15,10 @@ COPY entrypoint.sh entrypoint.sh
 ARG MONGODB_URI
 ARG DRIVER_VERSION
 
+ENV NODE_LTS_NAME "argon"
 ENV DRIVER_REVISION "master"
 ENV DRIVER_REPOSITORY "https://github.com/mongodb/node-mongodb-native.git"
+
 
 ENTRYPOINT ["/bin/bash", "/root/entrypoint.sh"]
 CMD ["master", "dubnium"]
