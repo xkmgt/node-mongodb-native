@@ -2,7 +2,7 @@ import * as os from 'os';
 import * as crypto from 'crypto';
 import { PromiseProvider } from './promise_provider';
 import { MongoError, AnyError } from './error';
-import { WriteConcern, WriteConcernOptions, W, writeConcernKeys } from './write_concern';
+import { WriteConcern, WriteConcernOptions, W } from './write_concern';
 import type { Server } from './sdam/server';
 import type { Topology } from './sdam/topology';
 import type { EventEmitter } from 'events';
@@ -10,12 +10,16 @@ import type { Db } from './db';
 import type { Collection } from './collection';
 import type { OperationOptions, OperationBase, Hint } from './operations/operation';
 import type { ClientSession } from './sessions';
-import type { ReadConcern } from './read_concern';
+import { ReadConcern } from './read_concern';
 import type { Connection } from './cmap/connection';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
-import type { Document } from './bson';
+import { Document, resolveBSONOptions } from './bson';
 import type { IndexSpecification, IndexDirection } from './operations/indexes';
+import type { MongoClient } from './mongo_client';
+import type { Cursor } from './cursor/cursor';
+import type { CommandOperationOptions, OperationParent } from './operations/command';
+import { ReadPreference } from './read_preference';
 
 /**
  * MongoDB Driver style callback
@@ -211,43 +215,6 @@ export function filterOptions(options: AnyOptions, names: string[]): AnyOptions 
   return filterOptions;
 }
 
-/** @internal */
-export function mergeOptionsAndWriteConcern(
-  targetOptions: AnyOptions,
-  sourceOptions: AnyOptions,
-  keys: string[],
-  mergeWriteConcern: boolean
-): AnyOptions {
-  // Mix in any allowed options
-  for (let i = 0; i < keys.length; i++) {
-    if (targetOptions[keys[i]] === undefined && sourceOptions[keys[i]] !== undefined) {
-      targetOptions[keys[i]] = sourceOptions[keys[i]];
-    }
-  }
-
-  // No merging of write concern
-  if (!mergeWriteConcern) return targetOptions;
-
-  // Found no write Concern options
-  let found = false;
-  for (let i = 0; i < writeConcernKeys.length; i++) {
-    if (targetOptions[writeConcernKeys[i]]) {
-      found = true;
-      break;
-    }
-  }
-
-  if (!found) {
-    for (let i = 0; i < writeConcernKeys.length; i++) {
-      if (sourceOptions[writeConcernKeys[i]]) {
-        targetOptions[writeConcernKeys[i]] = sourceOptions[writeConcernKeys[i]];
-      }
-    }
-  }
-
-  return targetOptions;
-}
-
 /**
  * Executes the given operation with provided arguments.
  *
@@ -272,10 +239,6 @@ export function executeLegacyOperation<T extends OperationBase>(
   options?: AnyOptions
 ): void | Promise<any> {
   const Promise = PromiseProvider.get();
-
-  if (topology == null) {
-    throw new TypeError('This method requires a valid topology instance');
-  }
 
   if (!Array.isArray(args)) {
     throw new TypeError('This method requires an array of arguments to apply');
@@ -441,17 +404,10 @@ export function isPromiseLike<T = any>(
  */
 export function decorateWithCollation(
   command: Document,
-  target: { s: { topology: Topology } } | { topology: Topology },
+  target: MongoClient | Db | Collection | Cursor,
   options: AnyOptions
 ): void {
-  const topology =
-    ('s' in target && target.s.topology) || ('topology' in target && target.topology);
-
-  if (!topology) {
-    throw new TypeError('parameter "target" is missing a topology');
-  }
-
-  const capabilities = topology.capabilities();
+  const capabilities = getTopology(target).capabilities();
   if (options.collation && typeof options.collation === 'object') {
     if (capabilities && capabilities.commandsTakeCollation) {
       command.collation = options.collation;
@@ -484,6 +440,23 @@ export function decorateWithReadConcern(
   if (Object.keys(readConcern).length > 0) {
     Object.assign(command, { readConcern: readConcern });
   }
+}
+
+/**
+ * A helper function to get the topology from a given provider. Throws
+ * if the topology cannot be found.
+ * @internal
+ */
+export function getTopology(provider: MongoClient | Db | Collection | Cursor): Topology {
+  if (`topology` in provider && provider.topology) {
+    return provider.topology;
+  } else if ('client' in provider.s && provider.s.client.topology) {
+    return provider.s.client.topology;
+  } else if ('db' in provider.s && provider.s.db.s.client.topology) {
+    return provider.s.db.s.client.topology;
+  }
+
+  throw new MongoError('MongoClient must be connected to perform this operation');
 }
 
 /** @internal */
@@ -1107,4 +1080,37 @@ export function hasAtomicOperators(doc: Document | Document[]): boolean {
 
   const keys = Object.keys(doc);
   return keys.length > 0 && keys[0][0] === '$';
+}
+
+/**
+ * Merge inherited properties from parent into options, prioritizing values from options,
+ * then values from parent.
+ * @internal
+ */
+export function resolveOptions<T extends CommandOperationOptions>(
+  parent: OperationParent | undefined,
+  options?: T
+): T {
+  const result: T = Object.assign({}, options, resolveBSONOptions(options, parent));
+
+  // Users cannot pass a readConcern/writeConcern to operations in a transaction
+  const session = options?.session;
+  if (!session?.inTransaction()) {
+    const readConcern = ReadConcern.fromOptions(options) ?? parent?.readConcern;
+    if (readConcern) {
+      result.readConcern = readConcern;
+    }
+
+    const writeConcern = WriteConcern.fromOptions(options) ?? parent?.writeConcern;
+    if (writeConcern) {
+      result.writeConcern = writeConcern;
+    }
+  }
+
+  const readPreference = ReadPreference.fromOptions(options) ?? parent?.readPreference;
+  if (readPreference) {
+    result.readPreference = readPreference;
+  }
+
+  return result;
 }
