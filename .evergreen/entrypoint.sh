@@ -1,3 +1,6 @@
+set -o xtrace
+set -o errexit
+
 echo "Getting ${DRIVER_REPOSITORY}@${DRIVER_REVISION} version ${DRIVER_VERSION}"
 git clone --depth 1 -b v${DRIVER_VERSION} $DRIVER_REPOSITORY driver_src
 cd driver_src
@@ -16,5 +19,8 @@ if [ $DRIVER_VERSION == "3.3.0" ]; then
   ./node_modules/.bin/mongodb-test-runner -s -l -e single test/core test/unit test/functional
 else
   echo "Latest version, running modern tests"
+  npx mocha --version
+  ls
   MONGODB_URI=${MONGODB_URI} npx mocha --recursive test/functional test/unit
+  echo "Ran tests"
 fi
