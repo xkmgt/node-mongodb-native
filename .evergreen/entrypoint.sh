@@ -15,5 +15,5 @@ if [ $DRIVER_VERSION == "3.3.0" ]; then
   echo "Old version, running special test script"
   ./node_modules/.bin/mongodb-test-runner -s -l -e single test/core test/unit test/functional
 else
-  npm run lint && MONGODB_URI=${MONGODB_URI} mocha --recursive test/functional test/unit
+  MONGODB_URI=${MONGODB_URI} npx mocha --recursive test/functional test/unit
 fi
