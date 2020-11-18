@@ -1,13 +1,12 @@
-set -o xtrace
-set -o errexit
-
 echo "Getting ${DRIVER_REPOSITORY}@${DRIVER_REVISION} version ${DRIVER_VERSION}"
 git clone --depth 1 -b v${DRIVER_VERSION} $DRIVER_REPOSITORY driver_src
 cd driver_src
 
 # Install desired version of Node
-export NVM_DIR=/root/.nvm
-$NVM_DIR/nvm.sh
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> "$HOME/.bashrc
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion" # This loads nvm bash_completion' >> "$HOME/.bashrc
+
 nvm install --no-progress $NODE_VERSION && npm install --silent
 
 # Run the tests with the provided MONGODB_URI
