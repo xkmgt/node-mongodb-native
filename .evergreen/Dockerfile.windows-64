@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2019
 ARG MONGODB_URI
 ARG DRIVER_VERSION
 
-ENV NVM "10.23.0"
+ENV NODE_VERSION "10.23.0"
 ENV DRIVER_REVISION "master"
 ENV DRIVER_REPOSITORY "https://github.com/mongodb/node-mongodb-native.git"
 
@@ -24,7 +24,7 @@ RUN ('root: {0}' -f $env:NVM_HOME), ('path: {0}' -f $env:NVM_SYMLINK), 'arch: 64
     -join [Environment]::NewLine | Set-Content -Path C:\nvm\settings.txt
 
 # Install Node and the Windows build tools
-RUN nvm install $env:NVM; nvm use $env:NVM
+RUN nvm install $env:NODE_VERSION; nvm use $env:NODE_VERSION
 RUN npm install --silent --global windows-build-tools
 
 # Install git
