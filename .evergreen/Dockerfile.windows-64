@@ -1,0 +1,39 @@
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+ARG MONGODB_URI
+ARG DRIVER_VERSION
+
+ENV NVM "10.23.0"
+ENV DRIVER_REVISION "master"
+ENV DRIVER_REPOSITORY "https://github.com/mongodb/node-mongodb-native.git"
+
+WORKDIR /
+
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
+
+# Install nvm
+ADD https://github.com/coreybutler/nvm-windows/releases/download/1.1.7/nvm-noinstall.zip nvm.zip
+RUN Expand-Archive nvm.zip; Remove-Item nvm.zip -Force
+RUN $env:NVM_HOME = 'C:\nvm'; \
+    $env:NVM_SYMLINK = 'C:\Program Files\nodejs'; \
+    $env:PATH = '{0};{1};{2}' -f $env:PATH,$env:NVM_HOME,$env:NVM_SYMLINK; \
+    [Environment]::SetEnvironmentVariable('PATH', $env:PATH, [EnvironmentVariableTarget]::Machine); \
+    [Environment]::SetEnvironmentVariable('NVM_HOME', $env:NVM_HOME, [EnvironmentVariableTarget]::Machine); \
+    [Environment]::SetEnvironmentVariable('NVM_SYMLINK', $env:NVM_SYMLINK, [EnvironmentVariableTarget]::Machine);
+RUN ('root: {0}' -f $env:NVM_HOME), ('path: {0}' -f $env:NVM_SYMLINK), 'arch: 64', 'proxy: none' \
+    -join [Environment]::NewLine | Set-Content -Path C:\nvm\settings.txt
+
+# Install Node and the Windows build tools
+RUN nvm install $env:NVM; nvm use $env:NVM
+RUN npm install --silent --global windows-build-tools
+
+# Install git
+ADD https://github.com/git-for-windows/git/releases/download/v2.29.2.windows.2/MinGit-2.29.2.2-64-bit.zip git.zip
+RUN Expand-Archive git.zip -DestinationPath c:\git; Remove-Item git.zip -Force
+RUN $env:PATH = '{0};{1}' -f $env:PATH,'c:\git\cmd'; \
+    [Environment]::SetEnvironmentVariable('PATH', $env:PATH, [EnvironmentVariableTarget]::Machine);
+RUN git config --global advice.detachedHead false
+
+COPY entrypoint.ps1 entrypoint.ps1
+
+ENTRYPOINT ["powershell.exe", "/entrypoint.ps1"]

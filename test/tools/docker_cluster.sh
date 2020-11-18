@@ -29,10 +29,12 @@ function docker_mongodb {
         die_with_usage
     fi
 
-    docker ps -f name=mongo_${1}_${2}
+    if [ -t 1 ]; then
+        docker ps -f name=mongo_${1}_${2}
 
-    printf "\n[ Tailing container logs, Ctrl+C to exit; the container is detached and will continue running until stopped with 'docker kill' ]\n\n"
-    docker logs -f $(docker ps -f name=mongo_${1}_${2} -q)
+        printf "\n[ Tailing container logs, Ctrl+C to exit; the container is detached and will continue running until stopped with 'docker kill' ]\n\n"
+        docker logs -f $(docker ps -f name=mongo_${1}_${2} -q)
+    fi
 }
 
 if [ "$#" -ne 2 ] && [ ${1:-''} != "killall" ]; then
