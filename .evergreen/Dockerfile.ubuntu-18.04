@@ -19,7 +19,11 @@ ENV NODE_VERSION "4.9.1"
 ENV DRIVER_REVISION "master"
 ENV DRIVER_REPOSITORY "https://github.com/mongodb/node-mongodb-native.git"
 
+# Install nvm
 RUN curl https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | bash
+
+# Configure git to not complain about detached head
+RUN git config --global advice.detachedHead false
 
 ENTRYPOINT ["/bin/bash", "/root/entrypoint.sh"]
 CMD ["master", "dubnium"]
