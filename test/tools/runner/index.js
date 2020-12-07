@@ -61,7 +61,16 @@ before(function(_done) {
   //   )} topology`
   // );
 
-  const client = new MongoClient(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+  const options = { useNewUrlParser: true, useUnifiedTopology: true };
+
+  const tlsCertificateKeyFile = process.env.SSL_KEY_FILE;
+  const tlsCAFile = process.env.SSL_CA_FILE;
+
+  if (tlsCertificateKeyFile && tlsCertificateKeyFile) {
+    Object.assign(options, { tls: true, tlsCertificateKeyFile, tlsCAFile });
+  }
+
+  const client = new MongoClient(MONGODB_URI, options);
   const done = err => client.close(err2 => _done(err || err2));
 
   client.connect(err => {

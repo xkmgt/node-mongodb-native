@@ -67,23 +67,38 @@ class NativeConfiguration {
     return !!process.env.MONGODB_UNIFIED_TOPOLOGY;
   }
 
+  get tlsOptions() {
+    const tlsCertificateKeyFile = process.env.SSL_KEY_FILE;
+    const tlsCAFile = process.env.SSL_CA_FILE;
+    if (tlsCertificateKeyFile && tlsCertificateKeyFile) {
+      return { tls: true, tlsCertificateKeyFile, tlsCAFile };
+    }
+    return {};
+  }
+
+  get unifiedOptions() {
+    if (this.usingUnifiedTopology()) {
+      return { useUnifiedTopology: true, minHeartbeatFrequencyMS: 100 };
+    }
+    return {};
+  }
+
   newClient(dbOptions, serverOptions) {
     // support MongoClient contructor form (url, options) for `newClient`
     if (typeof dbOptions === 'string') {
       return new MongoClient(
         dbOptions,
-        this.usingUnifiedTopology()
-          ? Object.assign({ useUnifiedTopology: true, minHeartbeatFrequencyMS: 100 }, serverOptions)
-          : serverOptions
+        Object.assign({}, this.unifiedOptions, this.tlsOptions, serverOptions)
       );
     }
 
     dbOptions = dbOptions || {};
-    serverOptions = Object.assign({}, { haInterval: 100 }, serverOptions);
-    if (this.usingUnifiedTopology()) {
-      serverOptions.useUnifiedTopology = true;
-      serverOptions.minHeartbeatFrequencyMS = 100;
-    }
+    serverOptions = Object.assign(
+      { haInterval: 100 },
+      this.unifiedOptions,
+      this.tlsOptions,
+      serverOptions
+    );
 
     // Fall back
     let dbHost = (serverOptions && serverOptions.host) || this.options.host;
