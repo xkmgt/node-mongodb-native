@@ -86,10 +86,7 @@ class NativeConfiguration {
   newClient(dbOptions, serverOptions) {
     // support MongoClient contructor form (url, options) for `newClient`
     if (typeof dbOptions === 'string') {
-      return new MongoClient(
-        dbOptions,
-        Object.assign({}, this.unifiedOptions, this.tlsOptions, serverOptions)
-      );
+      return new MongoClient(dbOptions, Object.assign({}, this.unifiedOptions, serverOptions));
     }
 
     dbOptions = dbOptions || {};
