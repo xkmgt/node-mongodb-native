@@ -1,4 +1,5 @@
 'use strict';
+const fs = require('fs');
 const url = require('url');
 const qs = require('querystring');
 const util = require('util');
@@ -65,6 +66,10 @@ class NativeConfiguration {
 
   usingUnifiedTopology() {
     return !!process.env.MONGODB_UNIFIED_TOPOLOGY;
+  }
+
+  usingTLS() {
+    return !!(process.env.SSL_KEY_FILE && process.env.SSL_CA_FILE);
   }
 
   get tlsOptions() {

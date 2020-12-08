@@ -14,7 +14,7 @@ const Connection = core.Connection;
 
 describe('Server tests', function() {
   it('should correctly connect server to single instance', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -34,7 +34,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute ismaster', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -60,7 +60,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute ismaster returning raw', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -93,7 +93,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute insert', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -128,7 +128,7 @@ describe('Server tests', function() {
   it(
     'should correctly connect server to single instance and send an uncompressed message if an uncompressible command is specified',
     {
-      metadata: { requires: { topology: 'single' } },
+      metadata: { requires: { topology: 'single', ssl: false } },
 
       test: function(done) {
         const config = this.configuration;
@@ -163,7 +163,7 @@ describe('Server tests', function() {
   );
 
   it('should correctly connect server to single instance and execute bulk insert', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -201,7 +201,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute insert with w:0', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -239,7 +239,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute update', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -278,7 +278,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly connect server to single instance and execute remove', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -318,7 +318,7 @@ describe('Server tests', function() {
   // Skipped due to use of topology manager
   it.skip('should correctly recover with multiple restarts', {
     metadata: {
-      requires: { topology: ['single'] }
+      requires: { topology: 'single', ssl: false }
     },
 
     // The actual test we wish to run
@@ -404,7 +404,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly reconnect to server with automatic reconnect enabled', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
     test: function(done) {
       const config = this.configuration;
       if (config.usingUnifiedTopology()) {
@@ -475,12 +475,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly reconnect to server with automatic reconnect disabled', {
-    metadata: {
-      requires: {
-        topology: 'single'
-      }
-      // ignore: { travis:true }
-    },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -545,12 +540,7 @@ describe('Server tests', function() {
   });
 
   it('should reconnect when initial connection failed', {
-    metadata: {
-      requires: {
-        topology: 'single'
-      },
-      ignore: { travis: true }
-    },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -587,7 +577,7 @@ describe('Server tests', function() {
   });
 
   it('should correctly place new connections in available list on reconnect', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
     test: function(done) {
       const config = this.configuration;
       if (config.usingUnifiedTopology()) {
@@ -653,12 +643,7 @@ describe('Server tests', function() {
   });
 
   it('should not overflow the poolSize due to concurrent operations', {
-    metadata: {
-      requires: {
-        topology: 'single'
-      },
-      ignore: { travis: true }
-    },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       var self = this;
@@ -708,7 +693,8 @@ describe('Server tests', function() {
     metadata: {
       requires: {
         node: '>0.8.0',
-        topology: ['single', 'ssl', 'wiredtiger']
+        topology: 'single',
+        ssl: false
       }
     },
 
@@ -780,7 +766,7 @@ describe('Server tests', function() {
   });
 
   it('should error when invalid compressors are specified', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
@@ -934,7 +920,7 @@ describe('Server tests', function() {
   it(
     'should correctly connect server to single instance and execute insert with snappy compression',
     {
-      metadata: { requires: { topology: ['single'], mongodb: '>=3.5.x' } },
+      metadata: { requires: { topology: 'single', mongodb: '>=3.5.x', ssl: false } },
 
       test: function(done) {
         const config = this.configuration;
@@ -1021,7 +1007,7 @@ describe('Server tests', function() {
 
   // NOTE: skipped for flakiness
   it.skip('Should not try to reconnect forever if reconnectTries = 0', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
       const config = this.configuration;
