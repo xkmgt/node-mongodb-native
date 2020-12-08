@@ -14,6 +14,9 @@ const MongoCredentials = require('../../../lib/core/auth/mongo_credentials').Mon
 
 const test = {};
 describe('Pool tests', function() {
+  before(function() {
+    if (this.configuration.usingTLS()) return this.skip();
+  });
   beforeEach(() => {
     test.spy = new ConnectionSpy();
     Connection.enableConnectionAccounting(test.spy);

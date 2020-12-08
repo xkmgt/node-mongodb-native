@@ -4848,7 +4848,7 @@ describe('Operation (Promises)', function() {
   it('Should correctly connect using MongoClient to a single server using connect With Promises', {
     // Add a tag that our runner can trigger on
     // in this case we are setting that node needs to be higher than 0.10.X to run
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function() {

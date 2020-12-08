@@ -8,7 +8,8 @@ describe('Error tests', function() {
     metadata: {
       requires: {
         mongodb: '< 4.1.x',
-        topology: ['single', 'replicaset']
+        topology: ['single', 'replicaset'],
+        ssl: false
       }
     },
 

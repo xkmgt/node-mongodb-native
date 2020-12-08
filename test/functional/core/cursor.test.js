@@ -6,12 +6,15 @@ const setupDatabase = require('./shared').setupDatabase;
 
 describe('Cursor tests', function() {
   before(function() {
+    if (this.configuration.usingTLS()) {
+      return this.skip();
+    }
     return setupDatabase(this.configuration);
   });
 
   it('Should iterate cursor', {
     metadata: {
-      requires: { topology: ['single', 'replicaset', 'sharded'] }
+      requires: { topology: ['single', 'replicaset', 'sharded'], ssl: false }
     },
 
     test: function(done) {

@@ -6,6 +6,7 @@ const setupDatabase = require('./shared').setupDatabase;
 
 describe('Tailable cursor tests', function() {
   before(function() {
+    if (this.configuration.usingTLS()) return this.skip();
     return setupDatabase(this.configuration);
   });
 

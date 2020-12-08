@@ -264,7 +264,7 @@ describe('Connection', function() {
    * @ignore
    */
   it('test connect server options', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
@@ -294,7 +294,7 @@ describe('Connection', function() {
    * @ignore
    */
   it('testConnectAllOptions', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
@@ -325,7 +325,7 @@ describe('Connection', function() {
    * @ignore
    */
   it('test connect good auth', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
@@ -361,7 +361,7 @@ describe('Connection', function() {
    * @ignore
    */
   it('test connect good auth as option', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {

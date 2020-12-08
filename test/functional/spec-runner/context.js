@@ -56,14 +56,15 @@ class TestRunnerContext {
   }
 
   setup(config) {
+    const serverOptions = Object.assign({ useUnifiedTopology: true }, config.tlsOptions);
     this.sharedClient = config.newClient(
       resolveConnectionString(config, { useMultipleMongoses: true }),
-      { useUnifiedTopology: true }
+      serverOptions
     );
 
     if (config.topologyType === 'Sharded') {
       this.failPointClients = config.options.hosts.map(proxy =>
-        config.newClient(`mongodb://${proxy.host}:${proxy.port}/`, { useUnifiedTopology: true })
+        config.newClient(`mongodb://${proxy.host}:${proxy.port}/`, serverOptions)
       );
     }
 

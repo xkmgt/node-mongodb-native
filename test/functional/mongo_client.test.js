@@ -315,7 +315,8 @@ describe('MongoClient', function() {
   it('Should correctly set MaxPoolSize on single server', {
     metadata: {
       requires: {
-        topology: ['single']
+        topology: ['single'],
+        ssl: false
       }
     },
 
@@ -487,7 +488,7 @@ describe('MongoClient', function() {
   });
 
   it('should correctly connect to mongodb using domain socket', {
-    metadata: { requires: { topology: ['single'], os: '!win32' } },
+    metadata: { requires: { topology: ['single'], os: '!win32', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
@@ -576,7 +577,8 @@ describe('MongoClient', function() {
   it('should fail dure to garbage connection string', {
     metadata: {
       requires: {
-        topology: ['single']
+        topology: ['single'],
+        ssl: false
       }
     },
 
@@ -629,7 +631,8 @@ describe('MongoClient', function() {
   it('Should correctly pass through appname', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded']
+        topology: ['single', 'replicaset', 'sharded'],
+        ssl: false
       }
     },
 
@@ -656,7 +659,8 @@ describe('MongoClient', function() {
   it('Should correctly pass through appname in options', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded']
+        topology: ['single', 'replicaset', 'sharded'],
+        ssl: false
       }
     },
 
@@ -713,7 +717,8 @@ describe('MongoClient', function() {
   it('Should correctly pass through socketTimeoutMS and connectTimeoutMS from uri', {
     metadata: {
       requires: {
-        topology: ['single']
+        topology: ['single'],
+        ssl: false
       }
     },
 
@@ -795,7 +800,7 @@ describe('MongoClient', function() {
   });
 
   it('Should use compression from URI', {
-    metadata: { requires: { topology: ['single'], unifiedTopology: false } },
+    metadata: { requires: { topology: ['single'], unifiedTopology: false, ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {

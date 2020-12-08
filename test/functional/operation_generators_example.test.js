@@ -3004,7 +3004,7 @@ describe('Operation (Generators)', function() {
    * @ignore
    */
   it('shouldCorrectlyAddAndRemoveUserWithGenerators', {
-    metadata: { requires: { generators: true, topology: 'single' } },
+    metadata: { requires: { generators: true, topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function() {

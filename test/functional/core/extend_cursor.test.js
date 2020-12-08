@@ -7,7 +7,7 @@ const CoreCursor = require('../../../lib/core/cursor').CoreCursor;
 describe('Extend cursor tests', function() {
   it('should correctly extend the cursor with custom implementation', {
     metadata: {
-      requires: { topology: ['single'] }
+      requires: { topology: ['single'], ssl: false }
     },
 
     test: function(done) {

@@ -21,7 +21,8 @@ describe('Server operation example tests', function() {
   it('simple insert into db', {
     metadata: {
       requires: {
-        topology: 'single'
+        topology: 'single',
+        ssl: false
       }
     },
 
@@ -75,7 +76,8 @@ describe('Server operation example tests', function() {
   it('update using Server instance', {
     metadata: {
       requires: {
-        topology: 'single'
+        topology: 'single',
+        ssl: false
       }
     },
 
@@ -148,7 +150,8 @@ describe('Server operation example tests', function() {
   it('remove using Server instance', {
     metadata: {
       requires: {
-        topology: 'single'
+        topology: 'single',
+        ssl: false
       }
     },
 
@@ -221,7 +224,8 @@ describe('Server operation example tests', function() {
   it('cursor using Server instance', {
     metadata: {
       requires: {
-        topology: 'single'
+        topology: 'single',
+        ssl: false
       }
     },
 
@@ -287,7 +291,8 @@ describe('Server operation example tests', function() {
   it('command using Server instance', {
     metadata: {
       requires: {
-        topology: 'single'
+        topology: 'single',
+        ssl: false
       }
     },
 

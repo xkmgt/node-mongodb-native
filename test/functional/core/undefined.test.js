@@ -5,6 +5,9 @@ var expect = require('chai').expect,
   ObjectId = require('bson').ObjectId;
 
 describe('A server', function() {
+  before(function() {
+    if (this.configuration.usingTLS()) return this.skip();
+  });
   it('should correctly execute insert culling undefined', {
     metadata: {
       requires: { topology: ['single', 'replicaset', 'sharded'] }

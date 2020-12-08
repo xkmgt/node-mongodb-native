@@ -1,5 +1,4 @@
 'use strict';
-const fs = require('fs');
 const url = require('url');
 const qs = require('querystring');
 const util = require('util');
@@ -35,7 +34,7 @@ class NativeConfiguration {
 
     this.mongo = this.require = require('../../..');
     this.writeConcern = function() {
-      return { w: 1 };
+      return { writeConcern: { w: 1 } };
     };
   }
 

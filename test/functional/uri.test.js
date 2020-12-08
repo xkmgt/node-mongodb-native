@@ -6,6 +6,9 @@ const ReplSet = require('../../lib/topologies/replset');
 const NativeTopology = require('../../lib/topologies/native_topology');
 
 describe('URI', function() {
+  before(function() {
+    if (this.configuration.usingTLS()) return this.skip();
+  });
   /**
    * @ignore
    */

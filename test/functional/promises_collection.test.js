@@ -11,7 +11,8 @@ describe('Promises (Collection)', function() {
   it('Should correctly execute Collection.prototype.insertOne', {
     metadata: {
       requires: {
-        topology: ['single']
+        topology: ['single'],
+        ssl: false
       }
     },
 
@@ -229,7 +230,7 @@ describe('Promises (Collection)', function() {
   it('Should correctly return failing Promise when no document array passed into insertMany', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded', 'ssl', 'heap', 'wiredtiger']
+        ssl: false
       }
     },
 
@@ -260,7 +261,7 @@ describe('Promises (Collection)', function() {
   it('Should correctly return failing Promise when array passed into insertOne', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded', 'ssl', 'heap', 'wiredtiger']
+        ssl: false
       }
     },
 
@@ -291,7 +292,7 @@ describe('Promises (Collection)', function() {
   it('Should correctly execute unordered bulk operation in promise form', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded', 'ssl', 'heap', 'wiredtiger']
+        ssl: false
       }
     },
 
@@ -325,7 +326,7 @@ describe('Promises (Collection)', function() {
   it('Should correctly execute ordered bulk operation in promise form', {
     metadata: {
       requires: {
-        topology: ['single', 'replicaset', 'sharded', 'ssl', 'heap', 'wiredtiger']
+        ssl: false
       }
     },
 

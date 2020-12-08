@@ -280,6 +280,7 @@ function runTestSuiteTest(configuration, spec, context) {
         useRecoveryToken: true,
         monitorCommands: true
       },
+      configuration.tlsOptions,
       spec.clientOptions
     )
   );

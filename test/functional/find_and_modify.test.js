@@ -138,9 +138,7 @@ describe('Find and Modify', function() {
   it('should pass through writeConcern to all findAndModify at db level', {
     // Add a tag that our runner can trigger on
     // in this case we are setting that node needs to be higher than 0.10.X to run
-    metadata: {
-      requires: { topology: ['single', 'replicaset', 'sharded', 'ssl', 'heap', 'wiredtiger'] }
-    },
+    metadata: { requires: { ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {

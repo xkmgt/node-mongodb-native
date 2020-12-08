@@ -12,6 +12,9 @@ const Connection = core.Connection;
 
 const test = {};
 describe('Operation tests', function() {
+  before(function() {
+    if (this.configuration.usingTLS()) return this.skip();
+  });
   beforeEach(function() {
     test.spy = new ConnectionSpy();
     Connection.enableConnectionAccounting(test.spy);

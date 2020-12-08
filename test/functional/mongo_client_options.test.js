@@ -14,7 +14,7 @@ describe('MongoClient Options', function() {
    * @ignore
    */
   it('pass in server and db top level options', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
@@ -44,7 +44,7 @@ describe('MongoClient Options', function() {
    * @ignore
    */
   it('pass in server and db top level options', {
-    metadata: { requires: { topology: 'single' } },
+    metadata: { requires: { topology: 'single', ssl: false } },
 
     // The actual test we wish to run
     test: function(done) {
