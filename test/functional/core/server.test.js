@@ -24,8 +24,7 @@ describe('Server tests', function() {
 
       // Add event listeners
       server.on('connect', function() {
-        server.destroy();
-        done();
+        server.destroy(done);
       });
 
       // Start connection
@@ -49,8 +48,7 @@ describe('Server tests', function() {
           expect(r.result.ismaster).to.be.true;
           expect(r.connection).to.not.be.null;
 
-          server.destroy();
-          done();
+          server.destroy(done);
         });
       });
 
@@ -81,8 +79,7 @@ describe('Server tests', function() {
             expect(r.result).to.be.an.instanceof(Buffer);
             expect(r.connection).to.not.be.null;
 
-            server.destroy();
-            done();
+            server.destroy(done);
           }
         );
       });
@@ -114,8 +111,7 @@ describe('Server tests', function() {
             expect(insertTwoErr).to.be.null;
             expect(insertTwoR.result.n).to.equal(1);
 
-            server.destroy();
-            done();
+            server.destroy(done);
           });
         });
       });
@@ -465,8 +461,7 @@ describe('Server tests', function() {
         expect(emittedClose).to.be.true;
         expect(server.isConnected()).to.be.true;
         expect(server.s.pool.retriesLeft).to.equal(30);
-        server.destroy();
-        done();
+        server.destroy(done);
       });
 
       // Start connection
@@ -530,8 +525,7 @@ describe('Server tests', function() {
       setTimeout(function() {
         expect(emittedClose).to.be.true;
         expect(server.isConnected()).to.be.false;
-        server.destroy();
-        done();
+        server.destroy(done);
       }, 500);
 
       // Start connection
@@ -539,7 +533,8 @@ describe('Server tests', function() {
     }
   });
 
-  it('should reconnect when initial connection failed', {
+  // Skipped due to use of topology manager
+  it.skip('should reconnect when initial connection failed', {
     metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
@@ -556,13 +551,11 @@ describe('Server tests', function() {
         });
 
         server.on('connect', function() {
-          server.destroy();
-          done();
+          server.destroy(done);
         });
 
         server.on('reconnect', function() {
-          server.destroy();
-          done();
+          server.destroy(done);
         });
 
         server.on('error', function(err) {
@@ -631,8 +624,7 @@ describe('Server tests', function() {
             expect(server.s.pool.inUseConnections.length).to.equal(0);
             expect(server.s.pool.connectingConnections).to.equal(0);
 
-            server.destroy();
-            done();
+            server.destroy(done);
           }, 1000);
         });
       });
@@ -642,7 +634,8 @@ describe('Server tests', function() {
     }
   });
 
-  it('should not overflow the poolSize due to concurrent operations', {
+  // skipped because server.connections is undefined
+  it.skip('should not overflow the poolSize due to concurrent operations', {
     metadata: { requires: { topology: 'single', ssl: false } },
 
     test: function(done) {
@@ -667,8 +660,7 @@ describe('Server tests', function() {
           if (!left) {
             expect(server.connections().length).to.equal(50);
 
-            done();
-            server.destroy();
+            server.destroy(done);
           }
         };
 
@@ -954,8 +946,7 @@ describe('Server tests', function() {
               expect(r.result.n).to.equal(1);
               expect(r.message.fromCompressed).to.be.true;
 
-              server.destroy();
-              done();
+              server.destroy(done);
             });
           });
         });
