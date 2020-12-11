@@ -91,7 +91,7 @@ describe('Connection', function() {
   });
 
   it('should support calling back multiple times on exhaust commands', {
-    metadata: { requires: { mongodb: '>=4.2.0', topology: ['single'], ssl: false } },
+    metadata: { requires: { mongodb: '>4.2.0', topology: ['single'], ssl: false } },
     test: function(done) {
       const ns = `${this.configuration.db}.$cmd`;
       const connectOptions = Object.assign(
@@ -122,7 +122,12 @@ describe('Connection', function() {
 
             conn.command(
               ns,
-              { getMore: cursor.id, collection: 'test', batchSize: 100 },
+              {
+                getMore:
+                  typeof cursor.id === 'number' ? BSON.Long.fromNumber(cursor.id) : cursor.id,
+                collection: 'test',
+                batchSize: 100
+              },
               { exhaustAllowed: true },
               (err, result) => {
                 expect(err).to.not.exist;
